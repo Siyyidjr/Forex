@@ -38,9 +38,18 @@ int start()
    
    double Wopen = iOpen(Symbol(),PERIOD_W1,0);
    double Dopen = iOpen(Symbol(),PERIOD_D1,0);
-   double Wpips = (Wopen-Bid)/MarketInfo(OrderSymbol(),MODE_POINT) / 10;
-   double Dpips = (Dopen-Bid)/MarketInfo(OrderSymbol(),MODE_POINT) / 10;
+   //double Wpips = (Wopen-Bid)/MarketInfo(OrderSymbol(),MODE_POINT)/10;
+   //double Dpips = (Dopen-Bid)/MarketInfo(OrderSymbol(),MODE_POINT)/10;
    
+   Print( Symbol() + " Digits " + Digits + " Point " + DoubleToString(Point, 5));
+   
+   Wpips = MathAbs(NormalizeDouble(Wopen-Bid,Digits)/Point)/10;
+   Dpips = MathAbs(NormalizeDouble(Dopen-Bid,Digits)/Point)/10;
+   if(Digits == 0)
+   {
+      Wpips = MathAbs(NormalizeDouble(Wopen-Bid,Digits)/Point);
+      Dpips = MathAbs(NormalizeDouble(Dopen-Bid,Digits)/Point);
+   }
    
    ma50 = iMA(NULL,0,50,0,MODE_SMA,PRICE_OPEN,0);
          
@@ -101,7 +110,7 @@ int start()
          
     int total=OrdersTotal();
     // write open orders
-    int y = 35;
+    int y = 10;
     int count = 0;
     for(int pos=0;pos<total;pos++)
     {
