@@ -38,8 +38,8 @@ int start()
    
    double Wopen = iOpen(Symbol(),PERIOD_W1,0);
    double Dopen = iOpen(Symbol(),PERIOD_D1,0);
-   //double Wpips = (Wopen-Bid)/MarketInfo(OrderSymbol(),MODE_POINT)/10;
-   //double Dpips = (Dopen-Bid)/MarketInfo(OrderSymbol(),MODE_POINT)/10;
+   double Wpips = (Wopen-Bid)/MarketInfo(OrderSymbol(),MODE_POINT)/10;
+   double Dpips = (Dopen-Bid)/MarketInfo(OrderSymbol(),MODE_POINT)/10;
    
    Print( Symbol() + " Digits " + Digits + " Point " + DoubleToString(Point, 5));
    
