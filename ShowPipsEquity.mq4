@@ -120,16 +120,19 @@ int start()
       string position = "";
       if(OrderType() == OP_BUY){
        pips = (OrderClosePrice()-OrderOpenPrice())/MarketInfo(OrderSymbol(),MODE_POINT) / 10;      
-       position = "BUY " + DoubleToString(OrderLots(),2) + " (" + (OrderLots()*MarketInfo(Symbol(),MODE_LOTSIZE))+ ") " + OrderSymbol()+ " " +OrderOpenPrice()+" => " + DoubleToString(OrderProfit(),2) + " " + AccountCurrency()+ " | Pips: " + DoubleToString(pips,2);            
+       if(MarketInfo(OrderSymbol(),MODE_DIGITS) == 0){pips = (OrderClosePrice()-OrderOpenPrice())/MarketInfo(OrderSymbol(),MODE_POINT) / 1;}
+                
+       position = "BUY " + DoubleToString(OrderLots(),2) + " " + OrderSymbol()+ " " +OrderOpenPrice()+" => " + DoubleToString(OrderProfit(),2) + " " + AccountCurrency()+ " | Pips: " + DoubleToString(pips,2);            
         ObjectCreate    ("O_"+OrderTicket(), OBJ_LABEL, windowIndex, 0, 0);
         ObjectSetText("O_"+OrderTicket(),position,font, "Verdana", DodgerBlue);     
         ObjectSet("O_"+OrderTicket(),OBJPROP_XDISTANCE,450);
         ObjectSet("O_"+OrderTicket(),OBJPROP_YDISTANCE,y + (25 * count));
         Print(position);
         count++;
-      }else if(OrderType() == OP_SELL){
+      }else if(OrderType() == OP_SELL){      
         pips = (OrderOpenPrice()-OrderClosePrice())/MarketInfo(OrderSymbol(),MODE_POINT) / 10;      
-        position = "SELL " + DoubleToString(OrderLots(),2) + " (" + (OrderLots()*MarketInfo(Symbol(),MODE_LOTSIZE))+ ") " + OrderSymbol()+ " " +OrderOpenPrice()+" => " + DoubleToString(OrderProfit(),2) + " " + AccountCurrency()+ " | Pips: " + DoubleToString(pips,2);
+        if(MarketInfo(OrderSymbol(),MODE_DIGITS) == 0){pips = (OrderClosePrice()-OrderOpenPrice())/MarketInfo(OrderSymbol(),MODE_POINT) / 1;}
+        position = "SELL " + DoubleToString(OrderLots(),2) + " " + OrderSymbol()+ " " +OrderOpenPrice()+" => " + DoubleToString(OrderProfit(),2) + " " + AccountCurrency()+ " | Pips: " + DoubleToString(pips,2);
         ObjectCreate    ("O_"+OrderTicket(), OBJ_LABEL, windowIndex, 0, 0);
         ObjectSetText("O_"+OrderTicket(),position,font, "Verdana", Red);     
         TextSetFont("Verdana", font, FW_BOLD);
