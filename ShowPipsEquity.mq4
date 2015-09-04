@@ -28,7 +28,7 @@ int init()
 //--------------------------------------------------------------------
 int start()                        
   {
-   ObjectsDeleteAll();
+   ObjectsDeleteAll(windowIndex);
    string txt1 = "";
    string txt2 = "";
    string txt3 = "";
@@ -138,7 +138,7 @@ int start()
 //--------------------------------------------------------------------
 int deinit()
 {
-   ObjectsDeleteAll();
+   ObjectsDeleteAll(windowIndex);
    // delete all objects   
    return(0);
 }
