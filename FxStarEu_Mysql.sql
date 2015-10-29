@@ -41,6 +41,7 @@ CREATE TABLE IF NOT EXISTS `OpenSignal` (
   `openp` float(25,6) DEFAULT '0',
   `sl` float(25,6) DEFAULT '0',
   `tp` float(25,6) DEFAULT '0',
+  `profit` float(55,2) DEFAULT '0',
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `account` varchar(250) DEFAULT '0',
   UNIQUE KEY `id` (`id`)
@@ -51,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `CloseSignal` (
   `id` varchar(250) DEFAULT NULL,
   `closet` datetime,
   `closep` float(25,6) DEFAULT '0',
-  `profit` float(25,2) DEFAULT '0',
+  `profit` float(55,2) DEFAULT '0',
   `pips` float(25,2) DEFAULT '0',
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `account` varchar(250) DEFAULT '0',
