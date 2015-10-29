@@ -1,5 +1,6 @@
 //+------------------------------------------------------------------+
 //|                                              FxStarEu_Master.mq4 |
+//|                                               Marcin Łukaszewski |
 //|                                          https://forex.fxstar.eu |
 //+------------------------------------------------------------------+
 #property copyright "Marcin Łukaszewski"
@@ -97,7 +98,7 @@ void OnTimer()
          if(OrderType() == OP_SELL){   
          
          Print(OrderOpenPrice());
-          Query = "INSERT INTO OpenSignal (id, symbol, volume, type, opent, openp, account, sl, tp) VALUES('" + OrderTicket() + "','" + OrderSymbol() + "', '" + OrderLots() + "','SELL','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + AccountNumber() + "','" + OrderStopLoss() + "','" + OrderTakeProfit() + "') ON DUPLICATE KEY UPDATE sl='" + OrderStopLoss() + "', tp='" + OrderTakeProfit() + "'";
+          Query = "INSERT INTO OpenSignal (id, symbol, volume, type, opent, openp, account, sl, tp, profit) VALUES('" + OrderTicket() + "','" + OrderSymbol() + "', '" + OrderLots() + "','SELL','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + AccountNumber() + "','" + OrderStopLoss() + "','" + OrderTakeProfit() + "','" + OrderProfit() + "') ON DUPLICATE KEY UPDATE sl='" + OrderStopLoss() + "', tp='" + OrderTakeProfit() + "', profit='" + OrderProfit() + "'";
           if (MySqlExecute(DB, Query))
               {
                Print ("Succeeded: ", Query);
@@ -112,7 +113,7 @@ void OnTimer()
          if(OrderType() == OP_BUY){   
           
           Print(OrderOpenPrice());
-          Query = "INSERT INTO OpenSignal (id, symbol, volume, type, opent, openp, account, sl, tp) VALUES('" + OrderTicket() + "','" + OrderSymbol() + "', '" + OrderLots() + "','BUY','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + AccountNumber() + "','" + OrderStopLoss() + "','" + OrderTakeProfit() + "') ON DUPLICATE KEY UPDATE sl='" + OrderStopLoss() + "', tp='" + OrderTakeProfit() + "'";
+          Query = "INSERT INTO OpenSignal (id, symbol, volume, type, opent, openp, account, sl, tp, profit) VALUES('" + OrderTicket() + "','" + OrderSymbol() + "', '" + OrderLots() + "','BUY','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + AccountNumber() + "','" + OrderStopLoss() + "','" + OrderTakeProfit() + "','" + OrderProfit() + "') ON DUPLICATE KEY UPDATE sl='" + OrderStopLoss() + "', tp='" + OrderTakeProfit() + "', profit='" + OrderProfit() + "'";
           if (MySqlExecute(DB, Query))
               {
                Print ("Succeeded: ", Query);
@@ -188,3 +189,4 @@ void OnTimer()
       Print ("Error of multiple statements: ", MySqlErrorDescription);
      }
    */
+ 
