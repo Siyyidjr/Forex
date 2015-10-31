@@ -18,8 +18,9 @@ double reg, regUp, regDn;
 void OnTick(void)
   {
    Print("Point : " + Point);
+   // 1- high regression, 2 - Low regression
    regUp = iCustom(NULL, 0, "Regression", 3,2,2000,1,0);
-   regDn = iCustom(NULL, 0, "Regression", 3,2,2000,1,0);
+   regDn = iCustom(NULL, 0, "Regression", 3,2,2000,2,0);
    
    total=OrdersTotal();
    if(total<1)
