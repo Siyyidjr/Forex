@@ -29,7 +29,7 @@ FLUSH PRIVILEGES;
 # REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'USER'@'%';
 
 # table account
-create table account(time datetime, accountid int, balance float(10,2),equity float(10,2),margin float(10,2),freemargin float(10,2), currency varchar(20), leverage int, UNIQUE KEY `time` (`time`));
+create table TABLE IF NOT EXISTS account(time datetime, accountid int, balance float(10,2),equity float(10,2),margin float(10,2),freemargin float(10,2), currency varchar(20), leverage int, UNIQUE KEY `time` (`time`));
 
 # table open and close signals
 CREATE TABLE IF NOT EXISTS `OpenSignal` (
@@ -41,9 +41,10 @@ CREATE TABLE IF NOT EXISTS `OpenSignal` (
   `openp` float(25,6) DEFAULT '0',
   `sl` float(25,6) DEFAULT '0',
   `tp` float(25,6) DEFAULT '0',
-  `profit` float(55,2) DEFAULT '0',
+  `profit` float(55,2) DEFAULT '0',  
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `account` varchar(250) DEFAULT '0',
+  `comment` text,
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -62,99 +63,7 @@ CREATE TABLE IF NOT EXISTS `CloseSignal` (
 
 # symbol M1 candles data + regression
 CREATE TABLE IF NOT EXISTS `GBPJPY` (
-  `time` bigint DEFAULT NULL,
-  `open` float(10,6) DEFAULT '0',
-  `close` float(10,6) DEFAULT '0',
-  `low` float(10,6) DEFAULT '0',
-  `high` float(10,6) DEFAULT '0',
-  `reg` float(10,6) DEFAULT '0',
-  `reghigh` float(10,6) DEFAULT '0',  
-  `reglow` float(10,6) DEFAULT '0',
-  UNIQUE KEY `time` (`time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-# symbol M1 candles data + regression
-CREATE TABLE IF NOT EXISTS `EURUSD` (
-  `time` bigint DEFAULT NULL,
-  `open` float(10,6) DEFAULT '0',
-  `close` float(10,6) DEFAULT '0',
-  `low` float(10,6) DEFAULT '0',
-  `high` float(10,6) DEFAULT '0',
-  `reg` float(10,6) DEFAULT '0',
-  `reghigh` float(10,6) DEFAULT '0',  
-  `reglow` float(10,6) DEFAULT '0',
-  UNIQUE KEY `time` (`time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-# symbol M1 candles data + regression
-CREATE TABLE IF NOT EXISTS `GBPAUD` (
-  `time` bigint DEFAULT NULL,
-  `open` float(10,6) DEFAULT '0',
-  `close` float(10,6) DEFAULT '0',
-  `low` float(10,6) DEFAULT '0',
-  `high` float(10,6) DEFAULT '0',
-  `reg` float(10,6) DEFAULT '0',
-  `reghigh` float(10,6) DEFAULT '0',  
-  `reglow` float(10,6) DEFAULT '0',
-  UNIQUE KEY `time` (`time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-# symbol M1 candles data + regression
-CREATE TABLE IF NOT EXISTS `FUS30` (
-  `time` bigint DEFAULT NULL,
-  `open` float(10,6) DEFAULT '0',
-  `close` float(10,6) DEFAULT '0',
-  `low` float(10,6) DEFAULT '0',
-  `high` float(10,6) DEFAULT '0',
-  `reg` float(10,6) DEFAULT '0',
-  `reghigh` float(10,6) DEFAULT '0',  
-  `reglow` float(10,6) DEFAULT '0',
-  UNIQUE KEY `time` (`time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-# symbol M1 candles data + regression
-CREATE TABLE IF NOT EXISTS `USDJPY` (
-  `time` bigint DEFAULT NULL,
-  `open` float(10,6) DEFAULT '0',
-  `close` float(10,6) DEFAULT '0',
-  `low` float(10,6) DEFAULT '0',
-  `high` float(10,6) DEFAULT '0',
-  `reg` float(10,6) DEFAULT '0',
-  `reghigh` float(10,6) DEFAULT '0',  
-  `reglow` float(10,6) DEFAULT '0',
-  UNIQUE KEY `time` (`time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-# symbol M1 candles data + regression
-CREATE TABLE IF NOT EXISTS `EURJPY` (
-  `time` bigint DEFAULT NULL,
-  `open` float(10,6) DEFAULT '0',
-  `close` float(10,6) DEFAULT '0',
-  `low` float(10,6) DEFAULT '0',
-  `high` float(10,6) DEFAULT '0',
-  `reg` float(10,6) DEFAULT '0',
-  `reghigh` float(10,6) DEFAULT '0',  
-  `reglow` float(10,6) DEFAULT '0',
-  UNIQUE KEY `time` (`time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-# symbol M1 candles data + regression
-CREATE TABLE IF NOT EXISTS `GBPUSD` (
-  `time` bigint DEFAULT NULL,
-  `open` float(10,6) DEFAULT '0',
-  `close` float(10,6) DEFAULT '0',
-  `low` float(10,6) DEFAULT '0',
-  `high` float(10,6) DEFAULT '0',
-  `reg` float(10,6) DEFAULT '0',
-  `reghigh` float(10,6) DEFAULT '0',  
-  `reglow` float(10,6) DEFAULT '0',
-  UNIQUE KEY `time` (`time`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-# symbol M1 candles data + regression
-CREATE TABLE IF NOT EXISTS `GBPCAD` (
-  `time` bigint DEFAULT NULL,
+  `time` datetime,
   `open` float(10,6) DEFAULT '0',
   `close` float(10,6) DEFAULT '0',
   `low` float(10,6) DEFAULT '0',
