@@ -1,6 +1,5 @@
 //+------------------------------------------------------------------+
 //|                                              FxStarEu_Master.mq4 |
-//|                                               Marcin Łukaszewski |
 //|                                          https://forex.fxstar.eu |
 //+------------------------------------------------------------------+
 #property copyright "Marcin Łukaszewski"
@@ -13,13 +12,18 @@
 
 //--- position refresh timer
 extern int timer = 3; 
-
+extern string Host = "localhost";
+extern string User = "fx";
+extern string Password = "pass";
+extern string Database = "fxstareu";
+extern int Port     = 3306;
+  
 string INI;
 int newbar = 0;
-string Host, User, Password, Database, Socket, Query; // database credentials
-int Port,ClientFlag;
+string Socket, Query;
+int ClientFlag;
 int DB; // database identifier
- 
+
 //+------------------------------------------------------------------+
 //| Expert initialization function                                   |
 //+------------------------------------------------------------------+
@@ -28,14 +32,14 @@ int OnInit()
    //create timer
    EventSetTimer(timer);
    //Print (MySqlVersion());
-   Host = "localhost";
-   User = "fx";
-   Password = "pass";
-   Database = "fxstareu";
-   Port     = 3306;
+
    Socket   = "0";
    ClientFlag = CLIENT_MULTI_STATEMENTS;
-   return(INIT_SUCCEEDED);
+
+   // create tables
+   CreateTable(); 
+      
+  return(INIT_SUCCEEDED);
   }
 //+------------------------------------------------------------------+
 //| Expert deinitialization function                                 |
@@ -56,13 +60,40 @@ void OnTick()
    Balance(); 
    }   
 }
-
+//+------------------------------------------------------------------+
+//| CreateDatabase function                                                   |
+//+------------------------------------------------------------------+
+void CreateTable()
+{
+ Print ("Host: ",Host, ", User: ", User, ", Database: ",Database, " Connecting...");  
+ DB = MySqlConnect(Host, User, Password, Database, Port, Socket, ClientFlag); 
+ if (DB == -1) { Print ("Connection failed! Error: "+MySqlErrorDescription); } else { Print ("Connected! DBID#",DB);}
+ Query = "create table IF NOT EXISTS `account_"+AccountNumber()+"`(time datetime, accountid int, balance float(10,2),equity float(10,2),margin float(10,2),freemargin float(10,2), currency varchar(20), leverage int, UNIQUE KEY `time` (`time`));";
+ Query = Query + "CREATE TABLE IF NOT EXISTS `OpenSignal_"+AccountNumber()+"` (  `id` varchar(250) DEFAULT NULL,  `symbol` varchar(250) DEFAULT '0',  `volume` float DEFAULT '0',  `type` varchar(250) DEFAULT '0',  `opent` datetime,  `openp` float(25,6) DEFAULT '0',  `sl` float(25,6) DEFAULT '0',  `tp` float(25,6) DEFAULT '0',  `profit` float(55,2) DEFAULT '0',    `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,  `account` varchar(250) DEFAULT '0',  `comment` text,  UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+ Query = Query + "CREATE TABLE IF NOT EXISTS `CloseSignal_"+AccountNumber()+"` (  `id` varchar(250) DEFAULT NULL,  `closet` datetime,  `closep` float(25,6) DEFAULT '0',  `profit` float(55,2) DEFAULT '0',  `pips` float(25,2) DEFAULT '0',  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,  `account` varchar(250) DEFAULT '0',  UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+ 
+ if (MySqlExecute(DB, Query))
+     {
+      Print("Create table Succeeded: ", Query);
+     }
+ else
+     {
+      Alert ("Error create databases: ", MySqlErrorDescription);
+      Print ("Query: ", Query);
+      return;
+     }     
+ MySqlDisconnect(DB);
+ Print ("Mysql Disconnected. Done!");
+}
+//+------------------------------------------------------------------+
+//| Balance function                                                   |
+//+------------------------------------------------------------------+
 void Balance()
 {
  Print ("Host: ",Host, ", User: ", User, ", Database: ",Database, " Connecting...");  
  DB = MySqlConnect(Host, User, Password, Database, Port, Socket, ClientFlag); 
  if (DB == -1) { Print ("Connection failed! Error: "+MySqlErrorDescription); } else { Print ("Connected! DBID#",DB);}
- Query = "INSERT INTO account (time, accountid, balance, equity, margin, freemargin, currency, leverage) VALUES('" + TimeToStr(Time[0], TIME_DATE|TIME_SECONDS) + "','" + AccountNumber() + "', '" + AccountBalance() + "', '" + AccountEquity() + "', '" + AccountMargin() + "', '" + AccountFreeMargin() + "', '" + AccountCurrency() + "', '" + AccountLeverage() + "')";
+ Query = "INSERT INTO account_"+AccountNumber()+" (time, accountid, balance, equity, margin, freemargin, currency, leverage) VALUES('" + TimeToStr(Time[0], TIME_DATE|TIME_SECONDS) + "','" + AccountNumber() + "', '" + AccountBalance() + "', '" + AccountEquity() + "', '" + AccountMargin() + "', '" + AccountFreeMargin() + "', '" + AccountCurrency() + "', '" + AccountLeverage() + "')";
  if (MySqlExecute(DB, Query))
      {
       Print ("Succeeded: ", Query);
@@ -98,7 +129,7 @@ void OnTimer()
          if(OrderType() == OP_SELL){   
          
          Print(OrderOpenPrice());
-          Query = "INSERT INTO OpenSignal (id, symbol, volume, type, opent, openp, account, sl, tp, profit) VALUES('" + OrderTicket() + "','" + OrderSymbol() + "', '" + OrderLots() + "','SELL','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + AccountNumber() + "','" + OrderStopLoss() + "','" + OrderTakeProfit() + "','" + OrderProfit() + "') ON DUPLICATE KEY UPDATE sl='" + OrderStopLoss() + "', tp='" + OrderTakeProfit() + "', profit='" + OrderProfit() + "'";
+          Query = "INSERT INTO OpenSignal_"+AccountNumber()+" (id, symbol, volume, type, opent, openp, account, sl, tp, profit) VALUES('" + OrderTicket() + "','" + OrderSymbol() + "', '" + OrderLots() + "','SELL','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + AccountNumber() + "','" + OrderStopLoss() + "','" + OrderTakeProfit() + "','" + OrderProfit() + "') ON DUPLICATE KEY UPDATE sl='" + OrderStopLoss() + "', tp='" + OrderTakeProfit() + "', profit='" + OrderProfit() + "'";
           if (MySqlExecute(DB, Query))
               {
                Print ("Succeeded: ", Query);
@@ -113,7 +144,7 @@ void OnTimer()
          if(OrderType() == OP_BUY){   
           
           Print(OrderOpenPrice());
-          Query = "INSERT INTO OpenSignal (id, symbol, volume, type, opent, openp, account, sl, tp, profit) VALUES('" + OrderTicket() + "','" + OrderSymbol() + "', '" + OrderLots() + "','BUY','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + AccountNumber() + "','" + OrderStopLoss() + "','" + OrderTakeProfit() + "','" + OrderProfit() + "') ON DUPLICATE KEY UPDATE sl='" + OrderStopLoss() + "', tp='" + OrderTakeProfit() + "', profit='" + OrderProfit() + "'";
+          Query = "INSERT INTO OpenSignal_"+AccountNumber()+" (id, symbol, volume, type, opent, openp, account, sl, tp, profit) VALUES('" + OrderTicket() + "','" + OrderSymbol() + "', '" + OrderLots() + "','BUY','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + AccountNumber() + "','" + OrderStopLoss() + "','" + OrderTakeProfit() + "','" + OrderProfit() + "') ON DUPLICATE KEY UPDATE sl='" + OrderStopLoss() + "', tp='" + OrderTakeProfit() + "', profit='" + OrderProfit() + "'";
           if (MySqlExecute(DB, Query))
               {
                Print ("Succeeded: ", Query);
@@ -142,7 +173,7 @@ void OnTimer()
          if(OrderType() == OP_SELL){   
           
           Print(OrderOpenPrice());
-          Query = "INSERT INTO CloseSignal (id, closet, closep, profit, pips, account) VALUES('" + OrderTicket() + "','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + OrderProfit() + "','" + Pips + "','" + AccountNumber() + "')";
+          Query = "INSERT INTO CloseSignal_"+AccountNumber()+" (id, closet, closep, profit, pips, account) VALUES('" + OrderTicket() + "','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + OrderProfit() + "','" + Pips + "','" + AccountNumber() + "')";
           if (MySqlExecute(DB, Query))
               {
                Print ("Succeeded: ", Query);
@@ -157,7 +188,7 @@ void OnTimer()
          if(OrderType() == OP_BUY){           
 
           Print(OrderOpenPrice());
-          Query = "INSERT INTO CloseSignal (id, closet, closep, profit, pips, account) VALUES('" + OrderTicket() + "','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + OrderProfit() + "','" + Pips + "','" + AccountNumber() + "')";
+          Query = "INSERT INTO CloseSignal_"+AccountNumber()+" (id, closet, closep, profit, pips, account) VALUES('" + OrderTicket() + "','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + OrderProfit() + "','" + Pips + "','" + AccountNumber() + "')";
           if (MySqlExecute(DB, Query))
               {
                Print ("Succeeded: ", Query);
