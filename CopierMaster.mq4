@@ -1,15 +1,15 @@
 //+------------------------------------------------------------------+
 //|                                         BreakermindMT4Master.mq4 |
-//|                             Copyright 2011-2014, Breakermind.com |
+//|                                  Copyright 2011, Breakermind.com |
 //|                                          https://breakermind.com |
 //+------------------------------------------------------------------+
-#property copyright   "© 2011-2014, Breakermind.com"
+#property copyright   "© 2011, Breakermind.com"
 #property link        "https://breakermind.com"
 
 input bool Start = true;
 input int Timer = 5000;
+input int Second = 60;
 input bool   ssl = false;
-//input string url="fx-breakermind.rhcloud.com";
 input string url="localhost";
 
 int Refresh = Timer;  
@@ -22,10 +22,10 @@ void OnInit()
  
    // api url http or https(ssl)
    if(ssl){
-      apiurl = "https://" + url + "/api.php"; 
+      apiurl = "https://" + url + "/fx/index.php"; 
    }
    if(!ssl){
-      apiurl = "http://" + url + "/api.php"; 
+      apiurl = "http://" + url + "/fx/index.php"; 
    }  
     
 }//end
@@ -44,13 +44,18 @@ void OnTimer(void)
    int orders=OrdersTotal();
    for(int i=0;i<orders;i++)
      {
-     if(!OrderSelect(i,SELECT_BY_POS,MODE_TRADES)){
-     Print("Orders error ",GetLastError());
-     break;
-     }
-         if(OrderType() <= OP_SELL){   
-            positions = positions + OrderOpenTime() + ";" + OrderTicket() + ";" + OrderOpenPrice() + ";" + OrderSymbol() + ";" + OrderLots() + ";" + OrderType() + ";" + OrderStopLoss() + ";" + OrderTakeProfit() + ";" + OrderProfit() + ";" + AccountNumber() +"|";
+     if(OrderSelect(i,SELECT_BY_POS,MODE_TRADES)){     
+         if(OrderType() == OP_SELL && OrderOpenTime() > (TimeCurrent()- Second) ){ 
+            Print("SELL");  
+            positions = positions + OrderOpenTime() + ";" + OrderTicket() + ";" + OrderOpenPrice() + ";" + OrderSymbol() + ";" + OrderLots() + ";" + "0" + ";" + OrderStopLoss() + ";" + OrderTakeProfit() + ";" + OrderProfit() + ";" + AccountNumber() +"|";
          }
+         if(OrderType() == OP_BUY && OrderOpenTime() > (TimeCurrent()- Second) ){  
+            Print("BUY");  
+            positions = positions + OrderOpenTime() + ";" + OrderTicket() + ";" + OrderOpenPrice() + ";" + OrderSymbol() + ";" + OrderLots() + ";" + "1" + ";" + OrderStopLoss() + ";" + OrderTakeProfit() + ";" + OrderProfit() + ";" + AccountNumber() +"|";
+         }
+      }else{
+      Print("Orders error ",GetLastError());
+      break;}
      }
 
    int ii, hTotal;
@@ -62,10 +67,10 @@ void OnTimer(void)
          Print("History Error ",GetLastError());
          break;
         }
-      if(OrderType()<=OP_SELL)
-        {
+      if(OrderType()==OP_SELL && OrderType()==OP_BUY)
+        {         
          historyall = historyall + OrderOpenTime() + ";" + OrderTicket() + ";" + OrderOpenPrice() + ";" + OrderSymbol() + ";" + OrderLots() + ";" + OrderType() + ";" + OrderStopLoss() + ";" + OrderTakeProfit() + ";" + OrderCloseTime() + ";" + OrderClosePrice() + ";" + OrderProfit() + ";" + AccountNumber() +"|";
-        }// if end
+        }
     }
 
       send = 
@@ -81,7 +86,6 @@ void OnTimer(void)
       ResetLastError();
       res=WebRequest("POST",apiurl,NULL,NULL,50,post,ArraySize(post),result,headers);
       
-
       if(res==-1)
         {
          Print("Error code =",GetLastError());
@@ -89,7 +93,7 @@ void OnTimer(void)
         }
       else
         {
-         Print("Server response:",CharArrayToString(result,0));
-        }      
+         Print("Server response:" + CharArrayToString(result,0));
+      }      
 }//end
 //+------------------------------------------------------------------+
