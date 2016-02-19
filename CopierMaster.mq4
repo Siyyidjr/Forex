@@ -8,7 +8,7 @@
 
 input bool Start = true;
 input int Timer = 5000;
-input int Second = 60;
+input int Second = 6000000;
 input bool   ssl = false;
 input string url="localhost";
 
@@ -17,7 +17,7 @@ string apiurl;
 
 void OnInit()
 {
- if(Refresh < 5000){ Refresh = 5000; }
+ if(Refresh < 3000){ Refresh = 3000; }
  EventSetMillisecondTimer(Refresh);       
  
    // api url http or https(ssl)
@@ -67,7 +67,7 @@ void OnTimer(void)
          Print("History Error ",GetLastError());
          break;
         }
-      if(OrderType()==OP_SELL && OrderType()==OP_BUY)
+      if(OrderType()==OP_SELL || OrderType()==OP_BUY)
         {         
          historyall = historyall + OrderOpenTime() + ";" + OrderTicket() + ";" + OrderOpenPrice() + ";" + OrderSymbol() + ";" + OrderLots() + ";" + OrderType() + ";" + OrderStopLoss() + ";" + OrderTakeProfit() + ";" + OrderCloseTime() + ";" + OrderClosePrice() + ";" + OrderProfit() + ";" + AccountNumber() +"|";
         }
@@ -97,3 +97,13 @@ void OnTimer(void)
       }      
 }//end
 //+------------------------------------------------------------------+
+
+/*
+
+<?php
+// save to file all data
+if($_SERVER['REMOTE_ADDR'] != "::1")echo "Error001";
+echo file_put_contents('pos/'.date('Y-m-d-H-m',time()).'.txt', serialize($_POST));
+?>
+
+*/
