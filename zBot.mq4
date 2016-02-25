@@ -2,6 +2,8 @@
 //|                                                         zBot.mq4 |
 //|                                   Copyright 2000-2016, fxstar.eu |
 //|                                                 http://fxstar.eu |
+//|                If you earn donate 10% from profit                |
+//|                   paypal hello@breakermind.com                   |
 //+------------------------------------------------------------------+
 #property copyright   "Copyright 2000-2016, fxstar.eu"
 #property link        "http://fxstar.eu"
