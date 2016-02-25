@@ -1,7 +1,7 @@
 //+------------------------------------------------------------------+
 //|                                                         zBot.mq4 |
-//|                                   Copyright 2000-2016, fxstar.eu |
-//|                                                 http://fxstar.eu |
+//|                                        Copyright 2016, fxstar.eu |
+//|                                                https://fxstar.eu |
 //|                If you earn donate 10% from profit                |
 //|                   paypal hello@breakermind.com                   |
 //+------------------------------------------------------------------+
