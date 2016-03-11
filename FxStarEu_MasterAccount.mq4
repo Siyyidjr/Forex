@@ -11,10 +11,10 @@
 #include <MQLMySQL.mqh>
 
 //--- position refresh timer
-extern int timer = 3; 
+extern int timer = 5; 
 extern string Host = "localhost";
-extern string User = "fx";
-extern string Password = "pass";
+extern string User = "root";
+extern string Password = "toor";
 extern string Database = "fxstareu";
 extern int Port     = 3306;
   
@@ -83,7 +83,7 @@ void CreateTable()
       return;
      }     
  MySqlDisconnect(DB);
- Print ("Mysql Disconnected. Done!");
+ Print ("Create Tables Done!");
 }
 //+------------------------------------------------------------------+
 //| Balance function                                                   |
@@ -100,12 +100,12 @@ void Balance()
      }
  else
      {
-      Print ("Error: ", MySqlErrorDescription);
+      Print ("!!! ", MySqlErrorDescription);
       Print ("Query: ", Query);
      }
      
  MySqlDisconnect(DB);
- Print ("Mysql Disconnected. Done!");
+ Print ("Equity. Done!");
 }
 //+------------------------------------------------------------------+
 //| Timer function                                                   |
@@ -136,7 +136,7 @@ void OnTimer()
               }
           else
               {
-               Print ("Error: ", MySqlErrorDescription);
+               Print ("!!! ", MySqlErrorDescription);
                Print ("Query: ", Query);
               }
          }
@@ -151,7 +151,7 @@ void OnTimer()
               }
           else
               {
-               Print ("Error: ", MySqlErrorDescription);
+               Print ("!!! ", MySqlErrorDescription);
                Print ("Query: ", Query);
               }
          }            
@@ -168,11 +168,13 @@ void OnTimer()
          break;
         }
         
-        int Pips = 0;
+        double Pips = 0;
      // SELL ORDERS
          if(OrderType() == OP_SELL){   
           
-          Print(OrderOpenPrice());
+          //Print(OrderOpenPrice());
+          Pips = ((OrderOpenPrice()-OrderClosePrice())/MarketInfo(OrderSymbol(),MODE_POINT))/10;
+          //Print("SELL Pips " + Pips);
           Query = "INSERT INTO CloseSignal_"+AccountNumber()+" (id, closet, closep, profit, pips, account) VALUES('" + OrderTicket() + "','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + OrderProfit() + "','" + Pips + "','" + AccountNumber() + "')";
           if (MySqlExecute(DB, Query))
               {
@@ -180,14 +182,16 @@ void OnTimer()
               }
           else
               {
-               Print ("Error: ", MySqlErrorDescription);
+               Print ("!!! ", MySqlErrorDescription);
                Print ("Query: ", Query);
               }
          }
       // BUY ORDERS
          if(OrderType() == OP_BUY){           
-
-          Print(OrderOpenPrice());
+          Pips = 0;
+          //Print(OrderOpenPrice());
+          Pips = ((OrderClosePrice()-OrderOpenPrice())/MarketInfo(OrderSymbol(),MODE_POINT))/10;
+          //Print("BUY Pips " +Pips);
           Query = "INSERT INTO CloseSignal_"+AccountNumber()+" (id, closet, closep, profit, pips, account) VALUES('" + OrderTicket() + "','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + OrderProfit() + "','" + Pips + "','" + AccountNumber() + "')";
           if (MySqlExecute(DB, Query))
               {
@@ -195,14 +199,14 @@ void OnTimer()
               }
           else
               {
-               Print ("Error: ", MySqlErrorDescription);
+               Print ("!!! ", MySqlErrorDescription);
                Print ("Query: ", Query);
               }
          }  
          
     }
    MySqlDisconnect(DB);
-   Print ("Mysql Disconnected. Done!");
+   Print ("Positions. Done!");
  }
 //+------------------------------------------------------------------+
 
