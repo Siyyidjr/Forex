@@ -175,7 +175,7 @@ void OnTimer()
           //Print(OrderOpenPrice());
           Pips = ((OrderOpenPrice()-OrderClosePrice())/MarketInfo(OrderSymbol(),MODE_POINT))/10;
           //Print("SELL Pips " + Pips);
-          Query = "INSERT INTO CloseSignal_"+AccountNumber()+" (id, closet, closep, profit, pips, account) VALUES('" + OrderTicket() + "','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + OrderProfit() + "','" + Pips + "','" + AccountNumber() + "')";
+          Query = "INSERT INTO CloseSignal_"+AccountNumber()+" (id, closet, closep, profit, pips, account) VALUES('" + OrderTicket() + "','" + OrderCloseTime() + "','" + OrderClosePrice() + "','" + OrderProfit() + "','" + Pips + "','" + AccountNumber() + "')";
           if (MySqlExecute(DB, Query))
               {
                Print ("Succeeded: ", Query);
@@ -192,7 +192,7 @@ void OnTimer()
           //Print(OrderOpenPrice());
           Pips = ((OrderClosePrice()-OrderOpenPrice())/MarketInfo(OrderSymbol(),MODE_POINT))/10;
           //Print("BUY Pips " +Pips);
-          Query = "INSERT INTO CloseSignal_"+AccountNumber()+" (id, closet, closep, profit, pips, account) VALUES('" + OrderTicket() + "','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + OrderProfit() + "','" + Pips + "','" + AccountNumber() + "')";
+          Query = "INSERT INTO CloseSignal_"+AccountNumber()+" (id, closet, closep, profit, pips, account) VALUES('" + OrderTicket() + "','" + OrderCloseTime() + "','" + OrderClosePrice() + "','" + OrderProfit() + "','" + Pips + "','" + AccountNumber() + "')";
           if (MySqlExecute(DB, Query))
               {
                Print ("Succeeded: ", Query);
