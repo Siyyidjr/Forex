@@ -69,8 +69,8 @@ void CreateTable()
  DB = MySqlConnect(Host, User, Password, Database, Port, Socket, ClientFlag); 
  if (DB == -1) { Print ("Connection failed! Error: "+MySqlErrorDescription); } else { Print ("Connected! DBID#",DB);}
  Query = "create table IF NOT EXISTS `account_"+AccountNumber()+"`(time datetime, accountid int, balance float(10,2),equity float(10,2),margin float(10,2),freemargin float(10,2), currency varchar(20), leverage int, UNIQUE KEY `time` (`time`));";
- Query = Query + "CREATE TABLE IF NOT EXISTS `OpenSignal_"+AccountNumber()+"` (  `id` varchar(250) DEFAULT NULL,  `symbol` varchar(250) DEFAULT '0',  `volume` float DEFAULT '0',  `type` varchar(250) DEFAULT '0',  `opent` datetime,  `openp` float(25,6) DEFAULT '0',  `sl` float(25,6) DEFAULT '0',  `tp` float(25,6) DEFAULT '0',  `profit` float(55,2) DEFAULT '0',    `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,  `account` varchar(250) DEFAULT '0',  `comment` text,  UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
- Query = Query + "CREATE TABLE IF NOT EXISTS `CloseSignal_"+AccountNumber()+"` (  `id` varchar(250) DEFAULT NULL,  `closet` datetime,  `closep` float(25,6) DEFAULT '0',  `profit` float(55,2) DEFAULT '0',  `pips` float(25,2) DEFAULT '0',  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,  `account` varchar(250) DEFAULT '0',  UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+ Query = Query + "CREATE TABLE IF NOT EXISTS `OpenSignal_"+AccountNumber()+"` (  `id` varchar(250) DEFAULT NULL, `symbol` varchar(250) DEFAULT '0',  `volume` float DEFAULT '0',  `type` varchar(250) DEFAULT '0',  `opent` datetime,  `openp` float(25,6) DEFAULT '0',  `sl` float(25,6) DEFAULT '0',  `tp` float(25,6) DEFAULT '0',  `profit` float(55,2) DEFAULT '0',    `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,  `account` varchar(250) DEFAULT '0',  `comment` text,  UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+ Query = Query + "CREATE TABLE IF NOT EXISTS `CloseSignal_"+AccountNumber()+"` ( `id` varchar(250) DEFAULT NULL, `symbol` varchar(250) DEFAULT '0',  `volume` float DEFAULT '0',  `type` varchar(250) DEFAULT '0',  `opent` datetime,  `openp` float(25,6) DEFAULT '0',  `sl` float(25,6) DEFAULT '0',  `tp` float(25,6) DEFAULT '0', `closet` datetime,  `closep` float(25,6) DEFAULT '0',  `profit` float(55,2) DEFAULT '0',  `pips` float(25,2) DEFAULT '0',  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,  `account` varchar(250) DEFAULT '0',  UNIQUE KEY `id` (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8;";
  
  if (MySqlExecute(DB, Query))
      {
@@ -175,7 +175,7 @@ void OnTimer()
           //Print(OrderOpenPrice());
           Pips = ((OrderOpenPrice()-OrderClosePrice())/MarketInfo(OrderSymbol(),MODE_POINT))/10;
           //Print("SELL Pips " + Pips);
-          Query = "INSERT INTO CloseSignal_"+AccountNumber()+" (id, closet, closep, profit, pips, account) VALUES('" + OrderTicket() + "','" + OrderCloseTime() + "','" + OrderClosePrice() + "','" + OrderProfit() + "','" + Pips + "','" + AccountNumber() + "')";
+          Query = "INSERT INTO CloseSignal_"+AccountNumber()+" (id, symbol, volume, type, opent, openp, account, sl, tp, closet, closep, profit, pips) VALUES('" + OrderTicket() + "','" + OrderSymbol() + "', '" + OrderLots() + "','SELL','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + AccountNumber() + "','" + OrderStopLoss() + "','" + OrderTakeProfit() + "','" + OrderCloseTime() + "','" + OrderClosePrice() + "','" + OrderProfit() + "','" + Pips + "')";
           if (MySqlExecute(DB, Query))
               {
                Print ("Succeeded: ", Query);
@@ -192,7 +192,7 @@ void OnTimer()
           //Print(OrderOpenPrice());
           Pips = ((OrderClosePrice()-OrderOpenPrice())/MarketInfo(OrderSymbol(),MODE_POINT))/10;
           //Print("BUY Pips " +Pips);
-          Query = "INSERT INTO CloseSignal_"+AccountNumber()+" (id, closet, closep, profit, pips, account) VALUES('" + OrderTicket() + "','" + OrderCloseTime() + "','" + OrderClosePrice() + "','" + OrderProfit() + "','" + Pips + "','" + AccountNumber() + "')";
+          Query = "INSERT INTO CloseSignal_"+AccountNumber()+" (id, symbol, volume, type, opent, openp, account, sl, tp, closet, closep, profit, pips) VALUES('" + OrderTicket() + "','" + OrderSymbol() + "', '" + OrderLots() + "','BUY','" + OrderOpenTime() + "','" + OrderOpenPrice() + "','" + AccountNumber() + "','" + OrderStopLoss() + "','" + OrderTakeProfit() + "','" + OrderCloseTime() + "','" + OrderClosePrice() + "','" + OrderProfit() + "','" + Pips + "')";
           if (MySqlExecute(DB, Query))
               {
                Print ("Succeeded: ", Query);
