@@ -1,5 +1,5 @@
 //+------------------------------------------------------------------+
-//|                                               BearBullsPower.mq4 |
+//|                                                      TrendFX.mq4 |
 //+------------------------------------------------------------------+
 
 #property indicator_separate_window
@@ -25,7 +25,7 @@ int init()
    SetIndexStyle(2,DRAW_LINE,0,1);
    SetIndexBuffer(3, ExtBuffer4);
    SetIndexStyle(3,DRAW_LINE,0,1);
-   IndicatorShortName("BearBullsPower Period (" + Period1 + ") ");
+   IndicatorShortName("TrendFX Period (" + Period1 + ") ");
    return(0);
   }
 
