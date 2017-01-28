@@ -17,3 +17,4 @@ Beginners: position max 0.01 lot(1000 base currency) from 100$
 I like: 2, 3, 5, 6 and: GBPJPY, GBPAUD, #US30, #WTI 
 Strategy: Add position every 500(or 100) Pips (GBPJPY, GBPAUD, #US30)
 
+### Donations(PayPal): hello@breakermind.com
