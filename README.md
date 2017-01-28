@@ -2,7 +2,8 @@
 MT4 Indicator Regression 2000 , 100Pips , DayWeekMonthOpenPrice and chart template
 
 # How to play on forex (how to invest on forex) Simple the best ...
-Select one (beginners: position max 0.01 lot(1000 base currency) from 100$):
+Beginners: position max 0.01 lot(1000 base currency) from 100$
+Select one:
 * 1 Month open price level for change position direction (Snake)
 * 2 Week open price level for change position direction (Snake)
 * 3 500 Pips levels for change position direction
