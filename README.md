@@ -29,3 +29,9 @@ Wybierz (najlepiej jedną metodę):
 
 Polecane: 2, 3, 5, 7 and: GBPJPY, GBPAUD, #US30, #WTI 
 Lub: Pozycja co 500 Pips (GBPJPY, GBPAUD, #US30) długo terminowo
+
+# Week open levels
+![alt text](https://github.com/breakermind/Mql4/blob/master/bg-3.jpg)
+
+# Forex from 10k to 100k in one week
+![alt text](https://github.com/breakermind/Mql4/blob/master/2016-from10k-to100k.png)
